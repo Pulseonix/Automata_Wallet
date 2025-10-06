@@ -1,4 +1,13 @@
+import { useState } from 'react';
+import { LuaSandboxDemo } from '../components/LuaSandboxDemo';
+
 function App() {
+  const [showDemo, setShowDemo] = useState(false);
+
+  if (showDemo) {
+    return <LuaSandboxDemo />;
+  }
+
   return (
     <div className="w-96 h-[600px] bg-white">
       <div className="flex flex-col items-center justify-center h-full p-8 text-center">
@@ -29,10 +38,18 @@ function App() {
             <h3 className="font-semibold text-sm text-gray-700 mb-2">Current Status</h3>
             <p className="text-sm text-gray-600">
               ✅ Project structure initialized<br />
-              ⏳ WASM-Lua PoC in progress<br />
+              ✅ Wasmoon validation complete<br />
+              🔨 Lua sandbox implementation<br />
               ⏳ Core wallet development pending
             </p>
           </div>
+          
+          <button
+            onClick={() => setShowDemo(true)}
+            className="w-full px-4 py-3 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors font-medium"
+          >
+            🧪 Test Lua Sandbox
+          </button>
           
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
             <p className="text-xs text-yellow-800">

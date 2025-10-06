@@ -27,6 +27,11 @@ export default defineConfig({
         popup: 'popup.html',
       },
     },
+    target: 'esnext', // Support for top-level await and workers
+  },
+  worker: {
+    format: 'es', // ES module format for workers
+    plugins: () => [],
   },
   server: {
     port: 5173,

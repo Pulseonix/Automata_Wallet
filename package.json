@@ -11,6 +11,7 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "test:poc": "node --loader ts-node/esm wasm-poc/run-tests.ts",
+    "test:sandbox": "tsx wasm-poc/test-sandbox.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,json,css,md}\"",
