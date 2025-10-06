@@ -19,25 +19,47 @@ const EXAMPLE_SCRIPTS = [
     code: 'return string.upper("hello world")',
   },
   {
-    name: 'Loops & Tables',
-    code: `local sum = 0
-for i = 1, 100 do
-  sum = sum + i
-end
-return sum`,
-  },
-  {
-    name: 'Complex Data',
-    code: `return {
-  name = "Automata Wallet",
-  version = "0.1.0",
-  balance = 1.5,
-  tokens = {"ETH", "USDC", "DAI"}
+    name: 'Wallet Info',
+    code: `-- Get wallet information
+local address = wallet.getAddress()
+local balance = wallet.getBalance()
+local network = wallet.getNetwork()
+
+return {
+  address = address,
+  balance = balance .. " ETH",
+  network = network
 }`,
   },
   {
-    name: 'Error Example',
-    code: 'error("This is a test error")',
+    name: 'Token Balance',
+    code: `-- Get USDC balance
+local usdc = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+local balance = wallet.getTokenBalance(usdc)
+
+return {
+  token = "USDC",
+  balance = balance
+}`,
+  },
+  {
+    name: 'Portfolio Value',
+    code: `-- Calculate portfolio value
+local eth = tonumber(wallet.getBalance())
+local ethPrice = 2000
+
+-- Get USDC balance
+local usdc = tonumber(wallet.getTokenBalance(
+  "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+))
+
+local total = (eth * ethPrice) + usdc
+
+return {
+  eth = eth,
+  usdc = usdc,
+  totalUSD = total
+}`,
   },
 ];
 
@@ -177,11 +199,40 @@ export function LuaSandboxDemo() {
         <ul className="text-sm text-blue-700 space-y-1">
           <li>✓ Isolated Web Worker execution</li>
           <li>✓ 5-second timeout enforcement</li>
-          <li>✓ Memory limits (monitored)</li>
+          <li>✓ Wallet, contract, network APIs</li>
+          <li>✓ HTTP access (whitelisted only)</li>
+          <li>✓ Persistent storage (sandboxed)</li>
           <li>✓ Error recovery and clear error messages</li>
           <li>✓ No direct access to DOM or extension APIs</li>
           <li>✓ Lua 5.4 via Wasmoon (WASM-compiled)</li>
         </ul>
+      </div>
+
+      {/* API Reference */}
+      <div className="mt-4 p-4 bg-gray-50 border border-gray-200 rounded">
+        <h3 className="font-semibold text-gray-800 mb-2">Available APIs:</h3>
+        <div className="text-sm text-gray-700 space-y-2">
+          <div>
+            <code className="bg-white px-2 py-1 rounded">wallet.*</code>
+            <span className="ml-2">getAddress(), getBalance(), getNetwork(), getTokenBalance()</span>
+          </div>
+          <div>
+            <code className="bg-white px-2 py-1 rounded">contract.*</code>
+            <span className="ml-2">read(), getABI()</span>
+          </div>
+          <div>
+            <code className="bg-white px-2 py-1 rounded">network.*</code>
+            <span className="ml-2">getChainId(), getBlockNumber(), getGasPrice()</span>
+          </div>
+          <div>
+            <code className="bg-white px-2 py-1 rounded">http.*</code>
+            <span className="ml-2">get(), isWhitelisted()</span>
+          </div>
+          <div>
+            <code className="bg-white px-2 py-1 rounded">storage.*</code>
+            <span className="ml-2">get(), set(), remove(), clear()</span>
+          </div>
+        </div>
       </div>
     </div>
   );

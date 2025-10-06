@@ -17,7 +17,6 @@ import type {
   WorkerResponse,
 } from '../workers/lua-sandbox.worker';
 import { createMockLuaAPIContext, prepareAPIForLua } from './lua-api-mock';
-import type { LuaAPIContext } from './lua-api-types';
 
 export interface ExecuteOptions {
   timeout?: number; // milliseconds, default 5000

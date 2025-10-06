@@ -119,8 +119,8 @@ automata-wallet/
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/automata-wallet.git
-cd automata-wallet
+git clone https://github.com/Pulseonix/Automata_Wallet.git
+cd Automata-Wallet
 
 # Install dependencies
 pnpm install
