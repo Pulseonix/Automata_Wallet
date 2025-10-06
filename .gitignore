@@ -1,0 +1,61 @@
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Production build
+dist/
+build/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Environment variables (NEVER commit private keys or seed phrases)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Chrome Extension artifacts
+*.crx
+*.pem
+*.zip
+
+# Temporary files
+*.tmp
+.cache/
+.parcel-cache/
+
+# Security audit results (keep in private repo)
+security-audit/
+audit-results/
+
+# WASM build artifacts
+*.wasm.map
+wasm-build/
+
+# Sentry
+.sentryclirc
