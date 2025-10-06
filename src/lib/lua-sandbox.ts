@@ -16,10 +16,13 @@ import type {
   TerminateMessage,
   WorkerResponse,
 } from '../workers/lua-sandbox.worker';
+import { createMockLuaAPIContext, prepareAPIForLua } from './lua-api-mock';
+import type { LuaAPIContext } from './lua-api-types';
 
 export interface ExecuteOptions {
   timeout?: number; // milliseconds, default 5000
   context?: Record<string, unknown>; // Initial Lua globals
+  includeAPIs?: boolean; // Include wallet/contract/network APIs (default: true)
 }
 
 export interface ExecuteResult<T = unknown> {
@@ -161,6 +164,15 @@ export class LuaSandbox {
 
     const id = `exec-${++this.executionCounter}-${Date.now()}`;
     const timeout = options.timeout ?? 5000;
+    const includeAPIs = options.includeAPIs ?? true;
+
+    // Merge context with APIs if requested
+    let context = options.context || {};
+    if (includeAPIs) {
+      const apiContext = createMockLuaAPIContext();
+      const luaAPIs = prepareAPIForLua(apiContext);
+      context = { ...luaAPIs, ...context };
+    }
 
     return new Promise((resolve, reject) => {
       // Set up timeout handler (backup to worker timeout)
@@ -195,7 +207,7 @@ export class LuaSandbox {
         id,
         code,
         timeout,
-        context: options.context,
+        context,
       };
 
       this.worker!.postMessage(message);
