@@ -66,8 +66,63 @@ async function initializeLua(): Promise<void> {
   if (!luaEngine) {
     luaEngine = await luaFactory.createEngine();
     
-    // Set up error handler
+    // Set up worker context flag
     luaEngine.global.set('__workerContext', true);
+    
+    // Register mock API functions inside the worker
+    // These are synchronous mocks for Phase 0.2 PoC
+    await registerMockAPIs();
+  }
+}
+
+/**
+ * Register mock wallet/contract/network APIs as Lua globals
+ * Phase 0.2: Simple sync mocks for validation
+ * Phase 0.3: Will use RPC message passing for real async calls
+ */
+async function registerMockAPIs(): Promise<void> {
+  if (!luaEngine) return;
+  
+  try {
+    // Create wallet API object with all methods
+    const walletAPI = {
+      getAddress: () => '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb',
+      getNetwork: () => 'sepolia',
+      getBalance: () => '1.5',
+      getTokenBalance: (tokenAddress: string) => {
+        // Mock USDC balance
+        if (tokenAddress.toLowerCase() === '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48') {
+          return '1000.50'; // 1000.50 USDC
+        }
+        // Mock DAI balance
+        if (tokenAddress.toLowerCase() === '0x6b175474e89094c44da98b954eedeac495271d0f') {
+          return '500.75'; // 500.75 DAI
+        }
+        return '0';
+      }
+    };
+    
+    // Create network API object with all methods
+    const networkAPI = {
+      getChainId: () => 11155111,
+      getBlockNumber: () => 5000000,
+      getGasPrice: () => '25'
+    };
+    
+    // Register APIs directly as globals
+    luaEngine.global.set('wallet', walletAPI);
+    luaEngine.global.set('network', networkAPI);
+    
+    // Add a simple print function
+    luaEngine.global.set('print', (...args: unknown[]) => {
+      console.log('[Lua]', ...args);
+      return null;
+    });
+    
+    console.log('[Worker] Registered Lua APIs: wallet, network, print');
+  } catch (error) {
+    console.error('[Worker] Failed to register APIs:', error);
+    throw error;
   }
 }
 
@@ -103,10 +158,16 @@ async function executeLuaScript(
     }, timeout);
   });
   
-  // Set up execution context
+  // Always re-register APIs before execution to ensure they're available
+  await registerMockAPIs();
+  
+  // Set up execution context (after APIs so context doesn't overwrite them)
   if (context) {
     for (const [key, value] of Object.entries(context)) {
-      luaEngine!.global.set(key, value);
+      // Don't overwrite our API registrations
+      if (key !== 'wallet' && key !== 'network' && key !== 'print') {
+        luaEngine!.global.set(key, value);
+      }
     }
   }
   

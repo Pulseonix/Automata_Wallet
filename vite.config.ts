@@ -8,7 +8,11 @@ import { resolve } from 'path';
 export default defineConfig({
   plugins: [
     react(),
-    crx({ manifest }),
+    crx({ 
+      manifest,
+      // Configure CRXJS for better development experience
+      browser: 'chrome',
+    }),
   ],
   resolve: {
     alias: {
@@ -28,6 +32,7 @@ export default defineConfig({
       },
     },
     target: 'esnext', // Support for top-level await and workers
+    minify: false, // Disable minification for easier debugging
   },
   worker: {
     format: 'es', // ES module format for workers
@@ -38,6 +43,22 @@ export default defineConfig({
     strictPort: true,
     hmr: {
       port: 5173,
+      // Disable HMR overlay for extension development
+      overlay: false,
+    },
+    // Add CORS headers for development
+    cors: true,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+      'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization',
+    },
+  },
+  // Optimize dependencies for extension environment
+  optimizeDeps: {
+    exclude: ['wasmoon'],
+    esbuildOptions: {
+      target: 'esnext',
     },
   },
 });

@@ -278,9 +278,33 @@ export function createMockLuaAPIContext(): LuaAPIContext {
 }
 
 /**
- * Convert API context to Lua-compatible format
+ * Get serializable API data for Lua context
  * 
- * Wraps async functions to work with Lua's callback/promise style
+ * Phase 0.2: Returns mock data that can be safely sent to worker
+ * Note: Functions cannot be sent via postMessage, so we return static data
+ * and let the worker register the actual API functions using wasmoon
+ */
+export function getSerializableAPIData(context: LuaAPIContext): Record<string, unknown> {
+  // For now, just return static/sync data that Lua can access
+  // Async operations will be implemented via RPC in Phase 0.3
+  return {
+    wallet: {
+      address: context.wallet.getAddress(),
+      network: context.wallet.getNetwork(),
+    },
+    network: {
+      chainId: context.network.getChainId(),
+    },
+    // Note: Async API calls (getBalance, contract.read, etc.) 
+    // will be implemented via message passing in future iterations
+  };
+}
+
+/**
+ * Prepare API context with actual function implementations
+ * 
+ * This version keeps functions in the main thread context
+ * Use this when NOT sending to a worker
  */
 export function prepareAPIForLua(context: LuaAPIContext): Record<string, unknown> {
   return {

@@ -16,7 +16,7 @@ import type {
   TerminateMessage,
   WorkerResponse,
 } from '../workers/lua-sandbox.worker';
-import { createMockLuaAPIContext, prepareAPIForLua } from './lua-api-mock';
+import { createMockLuaAPIContext, getSerializableAPIData } from './lua-api-mock';
 
 export interface ExecuteOptions {
   timeout?: number; // milliseconds, default 5000
@@ -169,7 +169,8 @@ export class LuaSandbox {
     let context = options.context || {};
     if (includeAPIs) {
       const apiContext = createMockLuaAPIContext();
-      const luaAPIs = prepareAPIForLua(apiContext);
+      // Use serializable data instead of functions (can't clone functions)
+      const luaAPIs = getSerializableAPIData(apiContext);
       context = { ...luaAPIs, ...context };
     }
 
