@@ -3,8 +3,10 @@
 ## Timeline Overview
 
 **Total Duration**: 24 weeks to beta launch  
-**Current Status**: Phase 0 Complete ✅ (1.5 weeks ahead of schedule)  
-**Next Milestone**: Phase 1 - Core Wallet Infrastructure
+**Current Status**: Phase 0 Complete ✅ | Phase 1 Starting 🚀  
+**Current Week**: Week 2 of 24 (October 9, 2025)  
+**Schedule Status**: 1.5 weeks ahead of schedule  
+**Next Milestone**: Phase 1.1 - Crypto Foundation (Week 2)
 
 ---
 
@@ -54,41 +56,192 @@ Tasks:
 
 ---
 
-## Phase 1: Secure Core Wallet (5 weeks)
+## Phase 1: Secure Core Wallet (5-6 weeks)
 
-### Week 4-5: Key Management & Security
+**Status**: 🚀 STARTING (October 9, 2025)  
+**Target Completion**: November 19, 2025  
+**Detailed Plan**: See `PHASE_1_START.md`
+
+### Week 2 (Oct 9-15): 🚀 CURRENT - Crypto Foundation
+**Focus**: BIP-39, WebCrypto, BIP-44 derivation
+
 Tasks:
 - [ ] Implement BIP-39 seed phrase generation (12/24 word)
+  - Create `src/lib/crypto/bip39.ts`
+  - Secure entropy generation with WebCrypto
+  - Mnemonic validation and checksum
+  - Tests with BIP-39 test vectors
+- [ ] Build encryption layer using WebCrypto API (AES-GCM)
+  - Create `src/lib/crypto/encryption.ts`
+  - PBKDF2 key derivation (100k iterations)
+  - AES-256-GCM encryption/decryption
+  - Unique IV per encryption
+  - Tests with known vectors
 - [ ] Build HD wallet derivation (BIP-44 compatible)
-- [ ] Create encryption layer using WebCrypto API (AES-GCM)
+  - Create `src/lib/crypto/derivation.ts`
+  - Ethereum path: m/44'/60'/0'/0/x
+  - Multi-account support
+  - Tests with BIP-44 vectors
 - [ ] Implement secure password requirements
-- [ ] Build password-based key decryption flow with rate limiting
-- [ ] Write comprehensive unit tests for all crypto operations
+  - Create `src/lib/crypto/password.ts`
+  - 12+ chars, mixed case, numbers, special chars
+  - Common password detection
+  - Rate limiting (5 attempts, 5-min lockout)
+  - Comprehensive tests
 
-### Week 6-7: Basic Transaction Functionality
+**Milestone 1 Checkpoint** (Oct 15):
+- ✅ All crypto tests passing (target: 100% coverage)
+- ✅ BIP-39/44 test vectors validated
+- ✅ Encryption performance <200ms
+- ✅ Ready for wallet core implementation
+
+### Week 3 (Oct 16-22): Wallet Core
+**Focus**: Wallet creation, unlock/lock, secure storage
+
+Tasks:
+- [ ] Implement wallet creation flow
+  - Create `src/lib/wallet/core.ts`
+  - New wallet generation
+  - Import existing wallet
+  - Show mnemonic with backup warning
+  - Encrypt and store securely
+- [ ] Build unlock/lock mechanism
+  - Update `src/lib/wallet/core.ts`
+  - Password-based unlock
+  - In-memory HD wallet
+  - Auto-lock after 30 minutes
+  - Manual lock with memory cleanup
+  - Session management
+- [ ] Create secure storage layer
+  - Create `src/lib/wallet/storage.ts`
+  - chrome.storage.local wrapper
+  - Type-safe operations
+  - Encrypted mnemonic storage
+  - Wallet metadata storage
+
+**Milestone 2 Checkpoint** (Oct 22):
+- ✅ Create → Lock → Unlock cycle works
+- ✅ Encrypted storage validated
+- ✅ Session timeout enforced
+- ✅ All wallet core tests passing
+
+### Week 4 (Oct 23-29): Blockchain Integration
+**Focus**: RPC providers, transactions, gas estimation
+
 Tasks:
 - [ ] Integrate ethers.js v6
-- [ ] Implement RPC provider management (Infura/Alchemy)
-- [ ] Build transaction construction for ETH transfers
-- [ ] Implement gas estimation with buffer
-- [ ] Create transaction signing flow
-- [ ] Build transaction broadcasting and confirmation tracking
+  - Create `src/lib/blockchain/provider.ts`
+  - Configure Infura/Alchemy providers
+  - Multi-network support (Mainnet, Sepolia)
+  - Fallback provider handling
+  - Connection health monitoring
+- [ ] Build transaction construction
+  - Create `src/lib/blockchain/transactions.ts`
+  - ETH transfer transaction builder
+  - Nonce calculation
+  - Transaction signing
+  - Broadcast and confirmation tracking
+- [ ] Implement gas estimation
+  - Create `src/lib/blockchain/gas.ts`
+  - Gas limit estimation
+  - Current gas price fetching
+  - Transaction cost calculation
+  - Gas price suggestions (slow/normal/fast)
 
-### Week 8: UI & Asset Display
+**Milestone 3 Checkpoint** (Oct 29):
+- ✅ Successfully send testnet transaction
+- ✅ Gas estimation accurate
+- ✅ Balance fetching works
+- ✅ All blockchain tests passing
+
+### Week 5-6 (Oct 30 - Nov 12): Wallet UI
+**Focus**: User interface for wallet operations
+
 Tasks:
-- [ ] Design and implement main wallet UI
-- [ ] Display wallet address with copy functionality
-- [ ] Show ETH balance with USD conversion
-- [ ] Build send transaction UI with validation
-- [ ] Create transaction confirmation modal
+- [ ] Build wallet creation UI
+  - Create `src/components/wallet/CreateWallet.tsx`
+  - Create `src/components/wallet/ImportWallet.tsx`
+  - Create `src/components/wallet/BackupWarning.tsx`
+  - Password creation with strength indicator
+  - Mnemonic display with confirmation
+- [ ] Design main wallet view
+  - Create `src/popup/WalletView.tsx`
+  - Create `src/components/wallet/BalanceDisplay.tsx`
+  - Create `src/components/wallet/AccountSelector.tsx`
+  - Create `src/components/wallet/NetworkSelector.tsx`
+  - Display ETH balance
+  - Show current address with copy
+  - Network and account selectors
+- [ ] Build send transaction UI
+  - Create `src/components/wallet/SendTransaction.tsx`
+  - Create `src/components/wallet/TransactionPreview.tsx`
+  - Create `src/components/wallet/GasSelector.tsx`
+  - Address validation
+  - Amount input with max button
+  - Gas configuration
+  - Transaction preview and confirmation
+- [ ] Add transaction history
+  - Create `src/lib/blockchain/history.ts`
+  - Create `src/components/wallet/TransactionHistory.tsx`
+  - Create `src/components/wallet/TransactionItem.tsx`
+  - Fetch from Etherscan API
+  - Display sent/received transactions
+  - Link to block explorer
 
-**Deliverable**: Functional ETH-only wallet that can send/receive
+**Milestone 4 Checkpoint** (Nov 12):
+- ✅ Complete user flow functional
+- ✅ UI responsive and intuitive
+- ✅ Error handling graceful
+- ✅ All components tested
+
+### Week 7 (Nov 13-19): Testing & Polish
+**Focus**: Integration tests, security, performance, documentation
+
+Tasks:
+- [ ] Write integration tests
+  - Create `src/__tests__/wallet-integration.test.ts`
+  - Full wallet creation flow
+  - Lock/unlock cycles
+  - Transaction sending
+  - Network switching
+  - Multi-account management
+- [ ] Security testing
+  - Create `src/__tests__/security.test.ts`
+  - Password brute force protection
+  - Encrypted storage validation
+  - Memory cleanup verification
+  - XSS/injection prevention
+- [ ] Performance testing
+  - Create `src/__tests__/performance.test.ts`
+  - Wallet creation <2 seconds
+  - Wallet unlock <1 second
+  - Transaction signing <500ms
+  - Gas estimation <2 seconds
+- [ ] Documentation
+  - Create `docs/guides/wallet-usage.md`
+  - Create `docs/guides/security-best-practices.md`
+  - Create `docs/api/wallet-api.md`
+  - Update ADRs if needed
+
+**Milestone 5 / Phase 1 Complete** (Nov 19):
+- ✅ 100% test coverage (crypto modules)
+- ✅ All integration tests passing
+- ✅ Security tests passing
+- ✅ Performance targets met
+- ✅ Documentation complete
+- ✅ Ready for Phase 2
+
+**Deliverable**: Functional ETH-only wallet that can send/receive with secure key management
 
 ---
 
 ## Phase 2: Enhanced Wallet Features (3 weeks)
 
-### Week 9-10: ERC-20 Token Support
+**Status**: ⏳ NOT STARTED  
+**Planned Start**: November 20, 2025  
+**Target Completion**: December 10, 2025
+
+### Week 8-9 (Nov 20 - Dec 3): ERC-20 Token Support
 Tasks:
 - [ ] Implement token contract detection and balance fetching
 - [ ] Add support for 10 major tokens (USDC, USDT, DAI, etc.)
@@ -96,7 +249,7 @@ Tasks:
 - [ ] Implement token approval flow
 - [ ] Add token import by contract address
 
-### Week 10-11: Transaction History & Network Management
+### Week 10 (Dec 4-10): Transaction History & Network Management
 Tasks:
 - [ ] Integrate Etherscan API for transaction history
 - [ ] Build transaction list UI with filtering
@@ -110,7 +263,11 @@ Tasks:
 
 ## Phase 3: Lua Scripting Foundation (5 weeks)
 
-### Week 12-13: Sandbox Integration
+**Status**: ⏳ NOT STARTED  
+**Planned Start**: December 11, 2025  
+**Target Completion**: January 14, 2026
+
+### Week 11-12 (Dec 11-24): Sandbox Integration
 Tasks:
 - [ ] Integrate Lua WASM module into extension bundle
 - [ ] Build isolated execution context (Web Worker + WASM)
@@ -119,7 +276,7 @@ Tasks:
 - [ ] Create memory limits and resource quotas
 - [ ] Build comprehensive error handling system
 
-### Week 14-15: Read-Only API Implementation
+### Week 13-14 (Dec 25 - Jan 7): Read-Only API Implementation
 Tasks:
 - [ ] Design and document Lua API specification
 - [ ] Implement wallet.* API (getAddress, getBalance)
@@ -128,7 +285,7 @@ Tasks:
 - [ ] Add http.get() for external data
 - [ ] Write API documentation with examples
 
-### Week 16: Script Editor UI
+### Week 15 (Jan 8-14): Script Editor UI
 Tasks:
 - [ ] Integrate Monaco Editor
 - [ ] Add Lua syntax highlighting and autocomplete
@@ -142,7 +299,11 @@ Tasks:
 
 ## Phase 4: State-Changing Operations (3 weeks)
 
-### Week 17: Transaction API Design
+**Status**: ⏳ NOT STARTED  
+**Planned Start**: January 15, 2026  
+**Target Completion**: February 4, 2026
+
+### Week 16 (Jan 15-21): Transaction API Design
 Tasks:
 - [ ] Design state-changing API specification
 - [ ] Implement transaction builder pattern in Lua
@@ -150,7 +311,7 @@ Tasks:
 - [ ] Create wallet.sendToken() function
 - [ ] Create contract.write() for contract interactions
 
-### Week 18-19: Approval Flow Integration
+### Week 17-18 (Jan 22 - Feb 4): Approval Flow Integration
 Tasks:
 - [ ] Build transaction preview UI for script-generated txns
 - [ ] Show clear attribution (which script created transaction)
@@ -165,7 +326,11 @@ Tasks:
 
 ## Phase 5: Security Hardening (3 weeks)
 
-### Week 20: Internal Security Review
+**Status**: ⏳ NOT STARTED  
+**Planned Start**: February 5, 2026  
+**Target Completion**: February 25, 2026
+
+### Week 19 (Feb 5-11): Internal Security Review
 Tasks:
 - [ ] Conduct threat modeling workshop
 - [ ] Perform code review focused on security
@@ -174,7 +339,7 @@ Tasks:
 - [ ] Check for XSS/injection vulnerabilities
 - [ ] Review permission model and CSP headers
 
-### Week 21-22: External Security Audit
+### Week 20-21 (Feb 12-25): External Security Audit
 Tasks:
 - [ ] Hire reputable security firm
 - [ ] Prepare audit materials and documentation
@@ -188,7 +353,11 @@ Tasks:
 
 ## Phase 6: Beta Preparation (2 weeks)
 
-### Week 23: Polish & Documentation
+**Status**: ⏳ NOT STARTED  
+**Planned Start**: February 26, 2026  
+**Target Completion**: March 11, 2026
+
+### Week 22 (Feb 26 - Mar 4): Polish & Documentation
 Tasks:
 - [ ] UI/UX refinement based on internal testing
 - [ ] Write comprehensive user documentation
@@ -196,7 +365,7 @@ Tasks:
 - [ ] Build 10 example scripts (portfolio tracker, alerts, etc.)
 - [ ] Record demo videos and tutorials
 
-### Week 24: Infrastructure & Analytics
+### Week 23 (Mar 5-11): Infrastructure & Analytics
 Tasks:
 - [ ] Build landing page with waitlist
 - [ ] Set up private Discord
@@ -211,19 +380,23 @@ Tasks:
 
 ## Phase 7: Beta Launch & Iteration (6+ weeks)
 
-### Week 25-26: Limited Beta (50 users)
+**Status**: ⏳ NOT STARTED  
+**Planned Start**: March 12, 2026  
+**Beta Launch Target**: March 12, 2026
+
+### Week 24-25 (Mar 12-25): Limited Beta (50 users)
 - Deploy as unlisted Chrome extension
 - High-touch onboarding in Discord
 - Daily check-ins on critical issues
 - Hot-fix deployment capability
 
-### Week 27-28: Expanded Beta (200 users)
+### Week 26-27 (Mar 26 - Apr 8): Expanded Beta (200 users)
 - Invite second wave
 - Analyze usage patterns
 - Identify most-requested features
 - Deploy 1-2 minor updates
 
-### Week 29-30: Full Beta (500 users)
+### Week 28-29 (Apr 9-22): Full Beta (500 users)
 - Open to all waitlist members
 - Analyze churn and retention
 - Prepare public launch decision
@@ -239,18 +412,55 @@ Tasks:
 
 ## Current Progress Tracker
 
-```
-Phase 0: Foundation              [████████████████████] 100% ✅ COMPLETE
-Phase 1: Core Wallet             [░░░░░░░░░░░░░░░░░░]   0% (Starting now)
-Phase 2: Enhanced Features       [░░░░░░░░░░░░░░░░░░]   0% (Not started)
-Phase 3: Lua Scripting           [░░░░░░░░░░░░░░░░░░]   0% (Not started)
-Phase 4: State Changes           [░░░░░░░░░░░░░░░░░░]   0% (Not started)
-Phase 5: Security Hardening      [░░░░░░░░░░░░░░░░░░]   0% (Not started)
-Phase 6: Beta Prep               [░░░░░░░░░░░░░░░░░░]   0% (Not started)
-Phase 7: Beta Launch             [░░░░░░░░░░░░░░░░░░]   0% (Not started)
+**Current Date**: October 9, 2025  
+**Current Week**: Week 2 of 29 (7% complete)  
+**Current Phase**: Phase 1 - Core Wallet Infrastructure 🚀  
+**Schedule Status**: ✅ 1.5 weeks ahead
 
-Overall Progress: ██░░░░░░░░░░░░░░░░░ 12% (Week 1.5 of 24 - ahead of schedule!)
 ```
+Phase 0: Foundation              [████████████████████] 100% ✅ COMPLETE (Week 0-1.5)
+Phase 1: Core Wallet             [██░░░░░░░░░░░░░░░░░]  10% 🚀 STARTING (Week 2-7)
+Phase 2: Enhanced Features       [░░░░░░░░░░░░░░░░░░]   0% ⏳ (Week 8-10)
+Phase 3: Lua Scripting           [░░░░░░░░░░░░░░░░░░]   0% ⏳ (Week 11-15)
+Phase 4: State Changes           [░░░░░░░░░░░░░░░░░░]   0% ⏳ (Week 16-18)
+Phase 5: Security Hardening      [░░░░░░░░░░░░░░░░░░]   0% ⏳ (Week 19-21)
+Phase 6: Beta Prep               [░░░░░░░░░░░░░░░░░░]   0% ⏳ (Week 22-23)
+Phase 7: Beta Launch             [░░░░░░░░░░░░░░░░░░]   0% ⏳ (Week 24-29)
+
+Overall Progress: ███░░░░░░░░░░░░░░░░ 14% (Week 2 of 29)
+ETA to Beta:      22 weeks remaining (March 12, 2026)
+```
+
+### Phase Completion Summary
+
+| Phase | Status | Start Date | End Date | Duration | Progress |
+|-------|--------|-----------|----------|----------|----------|
+| Phase 0 | ✅ COMPLETE | Sept 25 | Oct 6 | 1.5 weeks | 100% |
+| Phase 1 | 🚀 STARTING | Oct 9 | Nov 19 | 6 weeks | 10% |
+| Phase 2 | ⏳ PENDING | Nov 20 | Dec 10 | 3 weeks | 0% |
+| Phase 3 | ⏳ PENDING | Dec 11 | Jan 14 | 5 weeks | 0% |
+| Phase 4 | ⏳ PENDING | Jan 15 | Feb 4 | 3 weeks | 0% |
+| Phase 5 | ⏳ PENDING | Feb 5 | Feb 25 | 3 weeks | 0% |
+| Phase 6 | ⏳ PENDING | Feb 26 | Mar 11 | 2 weeks | 0% |
+| Phase 7 | ⏳ PENDING | Mar 12 | Apr 22+ | 6+ weeks | 0% |
+
+### Current Week Focus (Week 2: Oct 9-15)
+
+**Phase**: 1.1 - Crypto Foundation  
+**Priority**: Critical path - all future work depends on this
+
+**Tasks This Week**:
+1. 🔐 Implement BIP-39 seed generation (`src/lib/crypto/bip39.ts`)
+2. 🔐 Build WebCrypto encryption layer (`src/lib/crypto/encryption.ts`)
+3. 🔐 Create BIP-44 derivation (`src/lib/crypto/derivation.ts`)
+4. 🔐 Add password validation (`src/lib/crypto/password.ts`)
+5. ✅ Write comprehensive tests (target: 100% coverage)
+
+**Checkpoint**: Friday, October 15, 2025
+- All crypto tests passing
+- BIP-39/44 test vectors validated
+- Encryption performance <200ms
+- Ready for Milestone 1 sign-off
 
 ---
 
@@ -300,14 +510,13 @@ Ideas for future development:
 
 ---
 
-## Current Status: Week 1.5 Complete ✅
+## Current Status: Week 2 - Phase 1 Starting 🚀
 
 **Completed**: Phase 0 - Foundation & Technical Validation ✅  
-**Next**: Phase 1 - Core Wallet Infrastructure 🚀  
-**ETA to Beta**: 22.5 weeks remaining (ahead of schedule!)  
-
-🎉 **Outstanding progress! Phase 0 complete 1.5 weeks ahead of schedule.**  
-🚀 **GO decision confirmed - proceeding to Phase 1 with 95% confidence!**
+**Current**: Phase 1.1 - Crypto Foundation (Oct 9-15, 2025) 🚀  
+**Next Milestone**: Milestone 1 - Crypto Complete (Oct 15)  
+**ETA to Beta**: 22 weeks remaining (March 12, 2026)  
+**Schedule Status**: ✅ 1.5 weeks ahead
 
 ### Phase 0 Final Results
 
@@ -318,4 +527,14 @@ Ideas for future development:
 - ✅ **Security**: Multi-layer defense implemented and tested
 - ✅ **Timeline**: 1.5 weeks vs 3 weeks planned
 
-**See**: `PHASE_0.2_COMPLETE.md` for full validation report
+**Full Report**: See `PHASE_0.2_COMPLETE.md`
+
+### Phase 1 Resources
+
+- **Detailed Plan**: `PHASE_1_START.md` - Complete implementation guide
+- **Architecture**: `docs/architecture/ADR-003-key-management.md` - Crypto specs
+- **Schedule**: 6 weeks with 5 major milestones
+- **Target**: Functional ETH wallet with secure key management
+
+🎉 **Outstanding progress! Phase 0 complete 1.5 weeks ahead of schedule.**  
+🚀 **GO decision confirmed - proceeding to Phase 1 with 95% confidence!**

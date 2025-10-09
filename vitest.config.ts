@@ -8,6 +8,11 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./tests/setup.ts'],
+    // Use Node environment for crypto tests only (not Lua tests)
+    // Crypto tests use ethers.js which has Buffer issues in jsdom
+    environmentMatchGlobs: [
+      ['src/lib/crypto/*.test.ts', 'node'],
+    ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
